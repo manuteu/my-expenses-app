@@ -1,10 +1,12 @@
-import { Button } from './components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from './components/ui/card'
-import { Label } from './components/ui/label'
-import { Input } from './components/ui/input'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
+import { Button } from "@/shared/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
+import { Input } from "@/shared/ui/input";
+import { Label } from "@/shared/ui/label";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { useLoginMutation } from "../hooks";
+import { storageKeys } from "@/shared/config/storage-keys";
 
 export const loginSchema = z.object({
   email: z.string().email('E-mail inválido'),
@@ -13,7 +15,7 @@ export const loginSchema = z.object({
 
 export type LoginSchemaType = z.infer<typeof loginSchema>;
 
-function App() {
+export default function AuthForm() {
 
   const {
     register,
@@ -23,6 +25,15 @@ function App() {
     resolver: zodResolver(loginSchema),
   });
 
+  const { mutate: login, isPending } = useLoginMutation((data) => {
+    sessionStorage.setItem(storageKeys.ACCESS_TOKEN, data.token);
+    console.log('success login')
+    // changeAuthStatus(true);
+    // router.push('/dashboard');
+
+    // setUser(data.user);
+  })
+
   return (
     <section className='flex flex-col justify-center items-center h-screen gap-10'>
       <Card className="max-w-sm w-full">
@@ -30,7 +41,7 @@ function App() {
           <CardTitle>Entrar</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit((data) => console.log(data))} className="space-y-4">
+          <form onSubmit={handleSubmit((data) => login(data))} className="space-y-4">
             <div className='flex flex-col gap-2'>
               <Label htmlFor="email">E-mail</Label>
               <Input id="email" type="email" {...register('email')} />
@@ -43,12 +54,12 @@ function App() {
               {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
             </div>
 
-            <Button type="submit" className="w-full" disabled={false}>
+            <Button type="submit" className="w-full" disabled={isPending}>
               {/* {false ? <Spinner size="sm" className='border-secondary border-t-transparent' /> : 'Acessar'} */}
               Acessar
             </Button>
 
-            <Button type='button' variant='ghost' className="w-full" onClick={() => console.log('go to register page') }>
+            <Button type='button' variant='ghost' className="w-full" onClick={() => console.log('go to register page')}>
               Cadastrar Conta
             </Button>
           </form>
@@ -57,5 +68,3 @@ function App() {
     </section>
   )
 }
-
-export default App
