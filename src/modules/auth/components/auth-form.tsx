@@ -5,8 +5,9 @@ import { Label } from "@/shared/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useLoginMutation } from "../hooks";
+import { useLoginMutation } from "../hooks/useLogin";
 import { storageKeys } from "@/shared/config/storage-keys";
+import { useAuthStore } from "../hooks/useAuth";
 
 export const loginSchema = z.object({
   email: z.string().email('E-mail inválido'),
@@ -16,6 +17,7 @@ export const loginSchema = z.object({
 export type LoginSchemaType = z.infer<typeof loginSchema>;
 
 export default function AuthForm() {
+  const { changeAuthStatus } = useAuthStore()
 
   const {
     register,
@@ -27,11 +29,8 @@ export default function AuthForm() {
 
   const { mutate: login, isPending } = useLoginMutation((data) => {
     sessionStorage.setItem(storageKeys.ACCESS_TOKEN, data.token);
-    console.log('success login')
-    // changeAuthStatus(true);
-    // router.push('/dashboard');
+    changeAuthStatus(true);
 
-    // setUser(data.user);
   })
 
   return (

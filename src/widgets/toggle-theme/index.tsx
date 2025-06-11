@@ -19,7 +19,7 @@ export function ModeToggle() {
 
   return (
     <Button
-      variant="secondary"
+      variant="default"
       size="icon"
       className="relative"
       onClick={handleClick}

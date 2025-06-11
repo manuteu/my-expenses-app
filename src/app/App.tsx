@@ -5,7 +5,7 @@ import Router from './routes'
 function App() {
 
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="local_storage_theme">
+    <ThemeProvider defaultTheme="dark">
       <QueryProvider>
         <Router />
       </QueryProvider>
