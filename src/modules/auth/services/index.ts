@@ -6,3 +6,8 @@ export const authLogin = async (data: LoginSchemaType) => {
   const response = await api.post<ILoginResponse>('/auth/login', data);
   return response.data;
 };
+
+export function logout() {
+  sessionStorage.clear();
+  window.location.href = '/';
+}

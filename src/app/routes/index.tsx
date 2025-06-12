@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from 'react-router'
-import publicRoutes from './private-routes'
+import publicRoutes from './public-routes'
 import privateRoutes from './private-routes'
 import { useAuthStore } from '@/modules/auth/hooks/useAuth'
 

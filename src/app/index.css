@@ -152,3 +152,7 @@ input:-webkit-autofill {
   --shadow-xl: var(--shadow-xl);
   --shadow-2xl: var(--shadow-2xl);
 }
+
+*, body, span, h1, h2, h3, h4, h5, strong {
+  color: var(--foreground);
+}

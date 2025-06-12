@@ -14,8 +14,8 @@ export default function AppLayout() {
       }
     >
       <AppSidebar variant="inset" />
-      <SidebarInset>
-        <SidebarTrigger className="m-4 " />
+      <SidebarInset className="p-6">
+        <SidebarTrigger />
         <Outlet />
         <div className="fixed bottom-6 right-6">
           <ModeToggle />

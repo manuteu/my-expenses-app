@@ -11,7 +11,7 @@ type Action = {
 };
 
 const authStore = create<State & Action>((set) => ({
-  isAuthenticated: false,
+  isAuthenticated: !!sessionStorage.getItem(storageKeys.ACCESS_TOKEN),
   changeAuthStatus: (status: boolean) => set(() => ({ isAuthenticated: status })),
 }));
 

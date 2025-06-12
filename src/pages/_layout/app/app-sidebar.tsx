@@ -14,19 +14,24 @@ import {
   SidebarMenuItem,
 } from "@/shared/ui/sidebar"
 
-import { LayoutDashboard, CreditCard } from 'lucide-react'
+import { LayoutDashboard, CreditCard, Banknote } from 'lucide-react'
 import { useNavigate } from "react-router"
 
 const data = [
   {
     title: "Dashboard",
-    url: "/dashboard",
+    url: "/",
     icon: LayoutDashboard,
   },
   {
     title: "Cartões",
     url: "/cards",
     icon: CreditCard,
+  },
+  {
+    title: "Métodos",
+    url: "/methods",
+    icon: Banknote,
   },
 ]
 

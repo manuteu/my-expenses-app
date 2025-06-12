@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { storageKeys } from '@/shared/config/storage-keys';
 import { env } from '@/env';
-// import { logout } from '@/modules/auth/services/logout-service';
+import { logout } from '@/modules/auth/services';
 
 export const api = axios.create({
   baseURL: env.VITE_API_URL || 'http://localhost:3000',
@@ -22,7 +22,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // logout()
+      logout()
     }
     return Promise.reject(error);
   }
