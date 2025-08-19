@@ -4,6 +4,7 @@ import { expenseService } from '../services';
 export function useGetExpenses() {
   return useQuery({
     queryKey: ['expenses'],
-    queryFn: expenseService.getExpenses
+    queryFn: expenseService.getExpenses,
+    refetchOnWindowFocus: false
   });
 }

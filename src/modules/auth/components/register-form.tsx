@@ -5,19 +5,20 @@ import { Label } from "@/shared/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useLoginMutation } from "../hooks/useLogin";
+import { useRegisterMutation } from "../hooks/useRegister";
 import { storageKeys } from "@/shared/config/storage-keys";
 import { useAuthStore } from "../hooks/useAuth";
 import { useNavigate } from "react-router";
 
-export const loginSchema = z.object({
+export const registerSchema = z.object({
+  name: z.string().min(2, 'Nome inválido'),
   email: z.string().email('E-mail inválido'),
   password: z.string().min(6, 'Senha inválida'),
 });
 
-export type LoginSchemaType = z.infer<typeof loginSchema>;
+export type RegisterSchemaType = z.infer<typeof registerSchema>;
 
-export default function AuthForm() {
+export default function RegisterForm() {
   const { changeAuthStatus } = useAuthStore()
   const navigate = useNavigate();
 
@@ -25,11 +26,11 @@ export default function AuthForm() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginSchemaType>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<RegisterSchemaType>({
+    resolver: zodResolver(registerSchema),
   });
 
-  const { mutate: login, isPending } = useLoginMutation((data) => {
+  const { mutate: registerUser, isPending } = useRegisterMutation((data: { token: string }) => {
     sessionStorage.setItem(storageKeys.ACCESS_TOKEN, data.token);
     changeAuthStatus(true);
   })
@@ -38,10 +39,15 @@ export default function AuthForm() {
     <section className='flex flex-col justify-center items-center h-screen gap-10'>
       <Card className="max-w-sm w-full">
         <CardHeader>
-          <CardTitle>Entrar</CardTitle>
+          <CardTitle>Cadastrar Conta</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit((data) => login(data))} className="space-y-4">
+          <form onSubmit={handleSubmit((data) => registerUser(data))} className="space-y-4">
+            <div className='flex flex-col gap-2'>
+              <Label htmlFor="name">Nome</Label>
+              <Input id="name" type="text" {...register('name')} />
+              {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
+            </div>
             <div className='flex flex-col gap-2'>
               <Label htmlFor="email">E-mail</Label>
               <Input id="email" type="email" {...register('email')} />
@@ -53,14 +59,14 @@ export default function AuthForm() {
               {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
             </div>
             <Button type="submit" className="w-full" disabled={isPending}>
-              Acessar
+              Cadastrar
             </Button>
-            <Button type='button' variant='ghost' className="w-full" onClick={() => navigate('/')}>
-              Cadastrar Conta
+            <Button type='button' variant='ghost' className="w-full" onClick={() => navigate('/sign-in')}>
+              Já tem conta? Entrar
             </Button>
           </form>
         </CardContent>
       </Card>
     </section>
   )
-}
+} 
