@@ -46,17 +46,17 @@ export default function RegisterForm() {
             <div className='flex flex-col gap-2'>
               <Label htmlFor="name">Nome</Label>
               <Input id="name" type="text" {...register('name')} />
-              {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
+              {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
             </div>
             <div className='flex flex-col gap-2'>
               <Label htmlFor="email">E-mail</Label>
               <Input id="email" type="email" {...register('email')} />
-              {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
+              {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
             </div>
             <div className='flex flex-col gap-2'>
               <Label htmlFor="password">Senha</Label>
               <Input id="password" type="password" {...register('password')} />
-              {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
+              {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
             </div>
             <Button type="submit" className="w-full" disabled={isPending}>
               Cadastrar

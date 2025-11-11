@@ -1,9 +1,24 @@
 import { api } from '@/app/config/axios';
-import type { IExpensesResponse } from '../types';
+import type { IExpensesResponse, IExpensesChartResponse, Expense, CreateExpenseInput } from '../types';
 
 class ExpenseService {
   getExpenses = async () => {
     const response = await api.get<IExpensesResponse>('/expenses');
+    return response.data;
+  };
+
+  createExpense = async (data: CreateExpenseInput) => {
+    const response = await api.post<Expense>('/expenses', data);
+    return response.data;
+  };
+
+  getExpensesChart = async (startDate?: string, endDate?: string) => {
+    const params = new URLSearchParams();
+    if (startDate) params.append('startDate', startDate);
+    if (endDate) params.append('endDate', endDate);
+    
+    const url = `/expenses/chart-data${params.toString() ? `?${params.toString()}` : ''}`;
+    const response = await api.get<IExpensesChartResponse>(url);
     return response.data;
   };
 }

@@ -7,3 +7,11 @@ export interface ICardsResponse  {
   flag: string,
   bank: string,
 }
+
+export interface ICreateCardInput {
+  name: string;
+  type: string;
+  lastDigits: string;
+  flag: string;
+  bank: string;
+}

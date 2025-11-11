@@ -1,6 +1,6 @@
 export type IMethodResponse = PaymentMethod[]
 
-type PaymentMethodType = 'transfer' | 'card';
+export type PaymentMethodType = 'transfer' | 'card' | 'cash';
 
 type CardType = 'credit' | 'debit';
 type CardFlag = 'mastercard' | 'visa' | string;
@@ -16,11 +16,17 @@ interface Card {
   __v: number;
 }
 
-interface PaymentMethod {
+export interface PaymentMethod {
   _id: string;
   user: string;
   type: PaymentMethodType;
   name: string;
   card?: Card;
   __v: number;
+}
+
+export interface CreateMethodInput {
+  name: string;
+  type: PaymentMethodType;
+  card?: string;
 }
