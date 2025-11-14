@@ -31,14 +31,14 @@ export default function AuthForm() {
   });
 
   const { mutate: login, isPending } = useLoginMutation((data) => {
-    sessionStorage.setItem(storageKeys.ACCESS_TOKEN, data.token);
-    sessionStorage.setItem(storageKeys.USER, JSON.stringify(data.user));
+    localStorage.setItem(storageKeys.ACCESS_TOKEN, data.token);
+    localStorage.setItem(storageKeys.USER, JSON.stringify(data.user));
     setUser(data.user);
     changeAuthStatus(true);
   })
 
   return (
-    <section className='flex flex-col justify-center items-center h-screen gap-10'>
+    <section className='flex flex-col justify-center items-center h-screen gap-10 md:mx-0 mx-4 py-2'>
       <div className="flex items-center gap-3">
         <Wallet className="size-10 text-primary" />
         <h1 className="text-3xl font-bold text-foreground">My Expenses</h1>

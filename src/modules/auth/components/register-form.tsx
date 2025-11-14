@@ -32,19 +32,19 @@ export default function RegisterForm() {
   });
 
   const { mutate: registerUser, isPending } = useRegisterMutation((data: { token: string }) => {
-    sessionStorage.setItem(storageKeys.ACCESS_TOKEN, data.token);
+    localStorage.setItem(storageKeys.ACCESS_TOKEN, data.token);
     changeAuthStatus(true);
   })
 
   return (
-    <section className='flex flex-col justify-center items-center h-screen gap-10'>
+    <section className='flex flex-col justify-center items-center h-screen gap-10 md:mx-0 mx-4 py-2'>
       <div className="flex items-center gap-3">
         <Wallet className="size-10 text-primary" />
         <h1 className="text-3xl font-bold text-foreground">My Expenses</h1>
       </div>
       <Card className="max-w-sm w-full">
         <CardHeader>
-          <CardTitle>Cadastrar Conta</CardTitle>
+          <CardTitle className="text-center">Cadastrar Conta</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit((data) => registerUser(data))} className="space-y-4">

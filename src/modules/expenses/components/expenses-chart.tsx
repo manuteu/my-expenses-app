@@ -102,13 +102,13 @@ export default function ExpensesChart() {
 
       <CardContent>
         {isLoading && (
-          <div className="flex items-center justify-center h-[300px]">
+          <div className="flex items-center justify-center h-44 p-4">
             <p className="text-muted-foreground">Carregando dados do gráfico...</p>
           </div>
         )}
 
         {!isLoading && chartData.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-[300px] border-2 border-dashed border-border rounded-lg">
+          <div className="flex flex-col items-center justify-center h-44 border-2 border-dashed border-border rounded-lg p-4">
             <p className="text-muted-foreground">Nenhuma despesa encontrada no período selecionado</p>
           </div>
         )}

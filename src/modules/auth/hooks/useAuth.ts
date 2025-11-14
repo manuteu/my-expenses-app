@@ -19,17 +19,17 @@ type Action = {
 };
 
 const authStore = create<State & Action>((set) => ({
-  isAuthenticated: !!sessionStorage.getItem(storageKeys.ACCESS_TOKEN),
+  isAuthenticated: !!localStorage.getItem(storageKeys.ACCESS_TOKEN),
   user: (() => {
-    const userData = sessionStorage.getItem(storageKeys.USER);
+    const userData = localStorage.getItem(storageKeys.USER);
     return userData ? JSON.parse(userData) : null;
   })(),
   changeAuthStatus: (status: boolean) =>
     set(() => ({ isAuthenticated: status })),
   setUser: (user: User | null) => set(() => ({ user })),
   logout: () => {
-    sessionStorage.removeItem(storageKeys.ACCESS_TOKEN);
-    sessionStorage.removeItem(storageKeys.USER);
+    localStorage.removeItem(storageKeys.ACCESS_TOKEN);
+    localStorage.removeItem(storageKeys.USER);
     set(() => ({ isAuthenticated: false, user: null }));
   },
 }));
@@ -42,8 +42,8 @@ export const useAuthStore = () => {
   const logout = authStore((state) => state.logout);
 
   useEffect(() => {
-    const token = sessionStorage.getItem(storageKeys.ACCESS_TOKEN);
-    const userData = sessionStorage.getItem(storageKeys.USER);
+    const token = localStorage.getItem(storageKeys.ACCESS_TOKEN);
+    const userData = localStorage.getItem(storageKeys.USER);
 
     changeAuthStatus(!!token);
     if (userData) {

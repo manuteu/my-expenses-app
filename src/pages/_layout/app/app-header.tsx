@@ -17,9 +17,12 @@ export function AppHeader() {
   };
 
   return (
-    <Card className="flex flex-row items-center justify-between px-6 py-4 border-b border-border mx-6 mt-6">
+    <Card className="flex flex-row items-center justify-between md:px-6 px-4 md:py-4 py-3 border-b border-border md:mx-6 mx-4 md:mt-6 mt-4">
       <div className="flex items-center gap-3">
         {state === "collapsed" && <SidebarTrigger />}
+        <div className="sm:hidden block">
+          <SidebarTrigger />
+        </div>
         <div className="flex items-center gap-2">
           <User className="size-5 text-primary" />
           <span className="font-medium text-foreground">

@@ -5,7 +5,7 @@ export default function DashboardPage() {
   return (
     <main className="bg-background space-y-6">
       {/* Gráficos de despesas */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 md:gap-6 gap-4">
         {/* Gráfico de barras por categoria */}
         <ExpensesChart />
         
