@@ -1,6 +1,7 @@
 import AppLayout from "@/pages/_layout/app";
 import CardsPage from "@/pages/cards";
 import DashboardPage from "@/pages/dashboard";
+import ExpensesPage from "@/pages/expenses";
 import MethodsPage from "@/pages/methods";
 import { Navigate } from "react-router";
 
@@ -12,6 +13,10 @@ const privateRoutes = [
       {
         path: '/',
         element: <DashboardPage />,
+      },
+      {
+        path: '/expenses',
+        element: <ExpensesPage />,
       },
       {
         path: '/cards',

@@ -1,4 +1,12 @@
-export type IExpensesResponse = Expense[]
+export type IExpensesResponse = {
+  data: Expense[];
+  metadata: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  }
+}
 export type IExpensesChartResponse = ExpenseChart[]
 
 export type PaymentMethodType = 'transfer' | 'card' | 'cash';

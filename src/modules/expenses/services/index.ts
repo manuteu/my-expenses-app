@@ -2,8 +2,12 @@ import { api } from '@/app/config/axios';
 import type { IExpensesResponse, IExpensesChartResponse, Expense, CreateExpenseInput } from '../types';
 
 class ExpenseService {
-  getExpenses = async () => {
-    const response = await api.get<IExpensesResponse>('/expenses');
+  getExpenses = async ( page?: number, limit?: number ) => {
+    const params = new URLSearchParams();
+    if (page) params.append('page', page.toString());
+    if (limit) params.append('limit', limit.toString());
+
+    const response = await api.get<IExpensesResponse>(`/expenses${params.toString() ? `?${params.toString()}` : ''}`);
     return response.data;
   };
 

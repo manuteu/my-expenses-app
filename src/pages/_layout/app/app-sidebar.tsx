@@ -14,7 +14,7 @@ import {
   SidebarMenuItem,
 } from "@/shared/ui/sidebar"
 
-import { LayoutDashboard, CreditCard, Banknote } from 'lucide-react'
+import { LayoutDashboard, CreditCard, Banknote, Receipt } from 'lucide-react'
 import { useNavigate } from "react-router"
 
 const data = [
@@ -22,6 +22,11 @@ const data = [
     title: "Dashboard",
     url: "/",
     icon: LayoutDashboard,
+  },
+  {
+    title: "Despesas",
+    url: "/expenses",
+    icon: Receipt,
   },
   {
     title: "Cartões",

@@ -1,4 +1,3 @@
-import ListExpenses from "@/modules/expenses/components/list-expenses";
 import ExpensesChart from "@/modules/expenses/components/expenses-chart";
 import ExpensesDonutChart from "@/modules/expenses/components/expenses-donut-chart";
 
@@ -13,9 +12,6 @@ export default function DashboardPage() {
         {/* Gráfico donut por método */}
         <ExpensesDonutChart />
       </div>
-      
-      {/* Lista de despesas */}
-      <ListExpenses />
     </main>
   )
 }

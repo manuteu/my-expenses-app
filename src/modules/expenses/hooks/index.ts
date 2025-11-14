@@ -2,10 +2,10 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { expenseService } from '../services';
 import type { CreateExpenseInput } from '../types';
 
-export function useGetExpenses() {
+export function useGetExpenses(page: number = 1, limit: number = 10) {
   return useQuery({
-    queryKey: ['expenses'],
-    queryFn: expenseService.getExpenses,
+    queryKey: ['expenses', page, limit],
+    queryFn: () => expenseService.getExpenses(page, limit),
     refetchOnWindowFocus: false
   });
 }
