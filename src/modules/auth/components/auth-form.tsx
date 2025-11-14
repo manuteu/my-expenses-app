@@ -62,7 +62,7 @@ export default function AuthForm() {
             <Button type="submit" className="w-full" disabled={isPending}>
               Acessar
             </Button>
-            <Button type='button' variant='ghost' className="w-full" onClick={() => navigate('/')}>
+            <Button type='button' variant='ghost' className="w-full" onClick={() => navigate('/sign-up')}>
               Cadastrar Conta
             </Button>
           </form>

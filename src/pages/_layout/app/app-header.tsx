@@ -13,7 +13,7 @@ export function AppHeader() {
 
   const handleLogout = () => {
     logout();
-    navigate('/sign-in');
+    navigate('/');
   };
 
   return (

@@ -66,7 +66,7 @@ export default function RegisterForm() {
             <Button type="submit" className="w-full" disabled={isPending}>
               Cadastrar
             </Button>
-            <Button type='button' variant='ghost' className="w-full" onClick={() => navigate('/sign-in')}>
+            <Button type='button' variant='ghost' className="w-full" onClick={() => navigate('/')}>
               Já tem conta? Entrar
             </Button>
           </form>

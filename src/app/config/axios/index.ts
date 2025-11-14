@@ -3,8 +3,10 @@ import { storageKeys } from '@/shared/config/storage-keys';
 import { env } from '@/env';
 import { useAuthStore } from '@/modules/auth/hooks/useAuth';
 
+const baseURL = env.VITE_ENVIRONMENT === 'PROD' ? env.VITE_API_URL : 'http://localhost:3000';
+
 export const api = axios.create({
-  baseURL: env.VITE_API_URL || 'http://localhost:3000',
+  baseURL: baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
