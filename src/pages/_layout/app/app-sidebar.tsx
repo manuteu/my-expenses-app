@@ -12,9 +12,10 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
 } from "@/shared/ui/sidebar"
 
-import { LayoutDashboard, CreditCard, Banknote, Receipt } from 'lucide-react'
+import { LayoutDashboard, CreditCard, Banknote, Receipt, Wallet } from 'lucide-react'
 import { useNavigate } from "react-router"
 
 const data = [
@@ -50,11 +51,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
+              size='lg'
+              className="data-[slot=sidebar-menu-button]:!p-1.5 cursor-pointer"
             >
               <a href="#">
-                {/* <IconInnerShadowTop className="!size-5" /> */}
-                <span className="text-base font-semibold">Minhas Despesas</span>
+                <Wallet className="text-sidebar-primary size-5" />
+                <span className="text-base font-semibold">My Expenses</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -66,7 +68,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenu>
               {data.map((item) => (
                 <SidebarMenuItem key={item.title} onClick={() => navigate(item.url)}>
-                  <SidebarMenuButton tooltip={item.title}>
+                  <SidebarMenuButton tooltip={item.title} size='lg' variant='outline' className="cursor-pointer">
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>
                   </SidebarMenuButton>
@@ -76,8 +78,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
-        {/* <NavUser user={data.user} /> */}
+      <SidebarFooter className="border-t border-sidebar-border p-4">
+        <SidebarTrigger className="w-full" />
       </SidebarFooter>
     </Sidebar>
   )

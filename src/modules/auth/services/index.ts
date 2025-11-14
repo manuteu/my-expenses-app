@@ -14,7 +14,3 @@ export const authRegister = async (data: RegisterSchemaType) => {
   return response.data;
 };
 
-export function logout() {
-  sessionStorage.clear();
-  window.location.href = '/';
-}

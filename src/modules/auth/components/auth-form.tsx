@@ -9,6 +9,7 @@ import { useLoginMutation } from "../hooks/useLogin";
 import { storageKeys } from "@/shared/config/storage-keys";
 import { useAuthStore } from "../hooks/useAuth";
 import { useNavigate } from "react-router";
+import { Wallet } from "lucide-react";
 
 export const loginSchema = z.object({
   email: z.string().email('E-mail inválido'),
@@ -18,7 +19,7 @@ export const loginSchema = z.object({
 export type LoginSchemaType = z.infer<typeof loginSchema>;
 
 export default function AuthForm() {
-  const { changeAuthStatus } = useAuthStore()
+  const { changeAuthStatus, setUser } = useAuthStore()
   const navigate = useNavigate();
 
   const {
@@ -31,14 +32,20 @@ export default function AuthForm() {
 
   const { mutate: login, isPending } = useLoginMutation((data) => {
     sessionStorage.setItem(storageKeys.ACCESS_TOKEN, data.token);
+    sessionStorage.setItem(storageKeys.USER, JSON.stringify(data.user));
+    setUser(data.user);
     changeAuthStatus(true);
   })
 
   return (
     <section className='flex flex-col justify-center items-center h-screen gap-10'>
+      <div className="flex items-center gap-3">
+        <Wallet className="size-10 text-primary" />
+        <h1 className="text-3xl font-bold text-foreground">My Expenses</h1>
+      </div>
       <Card className="max-w-sm w-full">
         <CardHeader>
-          <CardTitle>Entrar</CardTitle>
+          <CardTitle className="text-center">Entrar</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit((data) => login(data))} className="space-y-4">

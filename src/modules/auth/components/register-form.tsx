@@ -9,6 +9,7 @@ import { useRegisterMutation } from "../hooks/useRegister";
 import { storageKeys } from "@/shared/config/storage-keys";
 import { useAuthStore } from "../hooks/useAuth";
 import { useNavigate } from "react-router";
+import { Wallet } from "lucide-react";
 
 export const registerSchema = z.object({
   name: z.string().min(2, 'Nome inválido'),
@@ -37,6 +38,10 @@ export default function RegisterForm() {
 
   return (
     <section className='flex flex-col justify-center items-center h-screen gap-10'>
+      <div className="flex items-center gap-3">
+        <Wallet className="size-10 text-primary" />
+        <h1 className="text-3xl font-bold text-foreground">My Expenses</h1>
+      </div>
       <Card className="max-w-sm w-full">
         <CardHeader>
           <CardTitle>Cadastrar Conta</CardTitle>

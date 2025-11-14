@@ -1,7 +1,7 @@
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/shared/ui/sidebar"
+import { SidebarInset, SidebarProvider } from "@/shared/ui/sidebar"
 import { AppSidebar } from "./app-sidebar"
 import { Outlet } from "react-router"
-import { ModeToggle } from "@/widgets/toggle-theme"
+import { AppHeader } from "./app-header"
 
 export default function AppLayout() {
   return (
@@ -14,12 +14,11 @@ export default function AppLayout() {
       }
     >
       <AppSidebar variant="inset" />
-      <SidebarInset className="p-6">
-        <SidebarTrigger />
-        <Outlet />
-        <div className="fixed bottom-6 right-6">
-          <ModeToggle />
-        </div>
+      <SidebarInset className="flex flex-col">
+        <AppHeader />
+        <main className="flex-1 p-6">
+          <Outlet />
+        </main>
       </SidebarInset>
     </SidebarProvider>
   )
