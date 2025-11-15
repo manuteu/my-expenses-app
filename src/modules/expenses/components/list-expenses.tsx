@@ -66,7 +66,7 @@ export default function ListExpenses() {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center flex-wrap">
         <h2 className="text-2xl font-bold text-foreground">Despesas</h2>
         <div className="flex items-center gap-2 flex-wrap">
 
