@@ -68,7 +68,7 @@ export default function ListExpenses() {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-foreground">Despesas</h2>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
 
           <div className="w-full max-w-sm">
             <DateRangePicker
@@ -164,7 +164,7 @@ export default function ListExpenses() {
       </div>
 
       {metadata && (
-        <div className="flex items-center justify-between px-2">
+        <div className="flex items-center justify-between px-2 flex-wrap">
           <div className="text-sm text-muted-foreground">
             Mostrando {((page - 1) * limit) + 1} a {Math.min(page * limit, metadata.total)} de {metadata.total} despesas
           </div>
