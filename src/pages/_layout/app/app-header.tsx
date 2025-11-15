@@ -17,7 +17,7 @@ export function AppHeader() {
   };
 
   return (
-    <Card className="flex flex-row items-center justify-between md:px-6 px-4 md:py-4 py-3 border-b border-border md:mx-6 mx-4 md:mt-6 mt-4">
+    <Card className="flex flex-row flex-wrap items-center justify-between md:px-6 px-4 md:py-4 py-3 border-b border-border md:mx-6 mx-4 md:mt-6 mt-4">
       <div className="flex items-center gap-3">
         {state === "collapsed" && <SidebarTrigger />}
         <div className="sm:hidden block">
