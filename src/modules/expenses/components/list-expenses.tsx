@@ -1,6 +1,6 @@
 import { useState } from "react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import { useGetExpenses } from "../hooks"
+import { ChevronLeft, ChevronRight, Trash, X } from "lucide-react"
+import { useDeleteExpense, useGetExpenses } from "../hooks"
 import CreateExpenseDialog from "./create-expense-dialog"
 import { formatCentsToCurrency } from "@/shared/lib/currency"
 import { formatDateToBR } from "@/shared/lib/date"
@@ -14,6 +14,9 @@ import {
 } from "@/shared/ui/table"
 import { Button } from "@/shared/ui/button"
 import { Skeleton } from "@/shared/ui/skeleton"
+import { queryClient } from "@/shared/lib/react-query"
+import { DateRangePicker } from "@/shared/ui/date-range-picker"
+import type { DateRange } from "react-day-picker"
 
 const EXPENSE_TYPE_LABELS = {
   simple: 'Simples',
@@ -23,10 +26,16 @@ const EXPENSE_TYPE_LABELS = {
 
 export default function ListExpenses() {
   const [page, setPage] = useState(1)
+  const [dateRange, setDateRange] = useState<DateRange | undefined>()
   const limit = 10
 
-  const { data, isLoading } = useGetExpenses(page, limit)
+  const startDate = dateRange?.from ? dateRange.from.toISOString().split('T')[0] : undefined
+  const endDate = dateRange?.to ? dateRange.to.toISOString().split('T')[0] : undefined
 
+  const { data, isLoading } = useGetExpenses(page, limit, startDate, endDate)
+  const { mutate: deleteExpense, isPending } = useDeleteExpense(() => {
+    queryClient.invalidateQueries({ queryKey: ['expenses'] });
+  })
   const expenses = data?.data ?? []
   const metadata = data?.metadata
 
@@ -40,12 +49,48 @@ export default function ListExpenses() {
     }
   }
 
+  const handleDeleteExpense = (expenseId: string) => {
+    deleteExpense(expenseId)
+  }
+
+  const handleDateRangeChange = (range: DateRange | undefined) => {
+    setDateRange(range)
+    // Reset para a primeira página quando o filtro muda
+    setPage(1)
+  }
+
+  const handleClearFilter = () => {
+    setDateRange(undefined)
+    setPage(1)
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-foreground">Despesas</h2>
-        <CreateExpenseDialog />
+        <div className="flex items-center gap-2">
+
+          <div className="w-full max-w-sm">
+            <DateRangePicker
+              dateRange={dateRange}
+              onDateRangeChange={handleDateRangeChange}
+              placeholder="Filtrar por período"
+            />
+          </div>
+          {(dateRange?.from || dateRange?.to) && (
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={handleClearFilter}
+              title="Limpar filtro"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
+          <CreateExpenseDialog />
+        </div>
       </div>
+
 
       <div className="rounded-md border border-border bg-card">
         <Table>
@@ -55,7 +100,8 @@ export default function ListExpenses() {
               <TableHead>Método</TableHead>
               <TableHead>Data</TableHead>
               <TableHead>Tipo</TableHead>
-              <TableHead className="text-right">Valor</TableHead>
+              <TableHead>Valor</TableHead>
+              <TableHead>Excluir</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -63,11 +109,12 @@ export default function ListExpenses() {
               <>
                 {Array.from({ length: 5 }).map((_, index) => (
                   <TableRow key={index}>
-                    <TableCell><Skeleton className="h-4 w-[200px]" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-[120px]" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-[80px]" /></TableCell>
-                    <TableCell className="text-right"><Skeleton className="h-4 w-[100px] ml-auto" /></TableCell>
+                    <TableCell><Skeleton className="h-5 w-[150px]" /></TableCell>
+                    <TableCell><Skeleton className="h-5 w-[100px]" /></TableCell>
+                    <TableCell><Skeleton className="h-5 w-[80px]" /></TableCell>
+                    <TableCell><Skeleton className="h-5 w-[60px]" /></TableCell>
+                    <TableCell className="text-right"><Skeleton className="h-5 w-[60px] ml-auto" /></TableCell>
+                    <TableCell className="text-right"><Skeleton className="h-5 w-[60px] ml-auto" /></TableCell>
                   </TableRow>
                 ))}
               </>
@@ -102,8 +149,13 @@ export default function ListExpenses() {
                     )}
                   </div>
                 </TableCell>
-                <TableCell className="text-right font-semibold">
+                <TableCell className="text font-semibold">
                   {formatCentsToCurrency(expense.amount)}
+                </TableCell>
+                <TableCell className="text-center font-semibold">
+                  <Button variant="ghost" onClick={() => handleDeleteExpense(expense._id)} disabled={isPending}>
+                    <Trash className="h-4 w-4 text-destructive" />
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -111,7 +163,7 @@ export default function ListExpenses() {
         </Table>
       </div>
 
-      {metadata && metadata.totalPages > 1 && (
+      {metadata && (
         <div className="flex items-center justify-between px-2">
           <div className="text-sm text-muted-foreground">
             Mostrando {((page - 1) * limit) + 1} a {Math.min(page * limit, metadata.total)} de {metadata.total} despesas
