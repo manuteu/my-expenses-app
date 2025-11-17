@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { storageKeys } from '@/shared/config/storage-keys';
 import { env } from '@/env';
-import { useAuthStore } from '@/modules/auth/hooks/useAuth';
+import authStore from '@/modules/auth/hooks/useAuth';
 
 const baseURL = env.VITE_ENVIRONMENT === 'PROD' ? env.VITE_API_URL : 'http://localhost:3000';
 
@@ -23,9 +23,19 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      useAuthStore().logout();
+    // Verifica se o erro é de token inválido ou expirado
+    const errorMessage = error.response?.data?.error;
+    const isTokenError = errorMessage === 'Token inválido ou expirado';
+    const isUnauthorized = error.response?.status === 401;
+
+    if (isTokenError || isUnauthorized) {
+      // Usa o store diretamente sem hook
+      authStore.getState().logout();
+      
+      // Redireciona para a página de login
+      window.location.href = '/';
     }
+    
     return Promise.reject(error);
   }
 );
