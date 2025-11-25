@@ -32,7 +32,7 @@ export default function CreateExpenseDialog() {
   const [open, setOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedStartDate, setSelectedStartDate] = useState<Date | undefined>();
-  
+
   const { data: methods, isLoading: isLoadingMethods } = useGetMethod();
   const { data: categories, isLoading: isLoadingCategories } = useGetCategories();
 
@@ -106,9 +106,9 @@ export default function CreateExpenseDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          Nova Despesa
+        <Button className="fixed md:static bottom-5 right-5 z-10">
+          <Plus className="h-4 w-4" />
+          <span className="hidden md:block">Nova Despesa</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">

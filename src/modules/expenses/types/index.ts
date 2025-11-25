@@ -69,10 +69,23 @@ interface PaymentMethod {
   __v: number;
 }
 
+interface Category {
+  _id: string;
+  user: string;
+  name: string;
+  icon: string;
+  color: string;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  __v: number;
+}
+
 export interface Expense {
   _id: string;
   user: string;
   amount: number;
+  category: Category;
   method: PaymentMethod;
   date: string;
   description: string;

@@ -38,17 +38,13 @@ export function formatCentsToInput(cents: number): string {
  */
 export function parseCurrencyToCents(value: string): number {
   if (!value) return 0;
-  
+
   // Remove tudo exceto números, vírgula e ponto
-  const cleaned = value.replace(/[^\d,.-]/g, '');
-  
-  // Substitui vírgula por ponto para parseFloat
-  const normalized = cleaned.replace(',', '.');
-  
-  const reais = parseFloat(normalized) || 0;
-  
+  const cleaned = value.replace(/[^\d]/g, '');
+  const reais = parseInt(cleaned) || 0;
+
   // Converte para centavos e arredonda
-  return Math.round(reais * 100);
+  return reais;
 }
 
 /**
@@ -60,16 +56,15 @@ export function parseCurrencyToCents(value: string): number {
 export function applyCurrencyMask(value: string): string {
   // Remove tudo exceto números
   const numbers = value.replace(/\D/g, '');
-  
+
   if (!numbers) return '';
-  
+
   // Converte para número e divide por 100 para ter centavos
   const amount = parseInt(numbers) / 100;
-  
+
   // Formata em BRL sem o símbolo
   return amount.toLocaleString('pt-BR', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
 }
-

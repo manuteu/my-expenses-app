@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight, Trash, X } from "lucide-react"
 import { useDeleteExpense, useGetExpenses } from "../hooks"
 import CreateExpenseDialog from "./create-expense-dialog"
 import { formatCentsToCurrency } from "@/shared/lib/currency"
-import { formatDateToBR } from "@/shared/lib/date"
+import { formatDateToBR, getCurrentMonthRange } from "@/shared/lib/date"
 import {
   Table,
   TableBody,
@@ -26,7 +26,7 @@ const EXPENSE_TYPE_LABELS = {
 
 export default function ListExpenses() {
   const [page, setPage] = useState(1)
-  const [dateRange, setDateRange] = useState<DateRange | undefined>()
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(getCurrentMonthRange())
   const limit = 10
 
   const startDate = dateRange?.from ? dateRange.from.toISOString().split('T')[0] : undefined
@@ -66,11 +66,11 @@ export default function ListExpenses() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center flex-wrap">
-        <h2 className="text-2xl font-bold text-foreground">Despesas</h2>
-        <div className="flex items-center gap-2 flex-wrap flex-1 justify-end">
+      <div className="flex items-center flex-wrap gap-4">
+        <h2 className="text-2xl font-bold text-foreground min-w-[200px]">Despesas</h2>
+        <div className="flex items-center gap-2 flex-wrap flex-1 md:justify-end justify-center">
 
-          <div className="w-full max-w-sm">
+          <div>
             <DateRangePicker
               dateRange={dateRange}
               onDateRangeChange={handleDateRangeChange}
@@ -100,6 +100,7 @@ export default function ListExpenses() {
               <TableHead>Método</TableHead>
               <TableHead>Data</TableHead>
               <TableHead>Tipo</TableHead>
+              <TableHead>Categoria</TableHead>
               <TableHead>Valor</TableHead>
               <TableHead>Excluir</TableHead>
             </TableRow>
@@ -113,7 +114,8 @@ export default function ListExpenses() {
                     <TableCell><Skeleton className="h-5 w-[100px]" /></TableCell>
                     <TableCell><Skeleton className="h-5 w-[80px]" /></TableCell>
                     <TableCell><Skeleton className="h-5 w-[60px]" /></TableCell>
-                    <TableCell className="text-right"><Skeleton className="h-5 w-[60px] ml-auto" /></TableCell>
+                    <TableCell><Skeleton className="h-5 w-[60px]" /></TableCell>
+                    <TableCell><Skeleton className="h-5 w-[60px]" /></TableCell>
                     <TableCell className="text-right"><Skeleton className="h-5 w-[60px] ml-auto" /></TableCell>
                   </TableRow>
                 ))}
@@ -149,6 +151,9 @@ export default function ListExpenses() {
                     )}
                   </div>
                 </TableCell>
+                <TableCell>
+                  {expense.category.icon}
+                </TableCell>
                 <TableCell className="text font-semibold">
                   {formatCentsToCurrency(expense.amount)}
                 </TableCell>
@@ -164,7 +169,7 @@ export default function ListExpenses() {
       </div>
 
       {metadata && (
-        <div className="flex items-center justify-between px-2 flex-wrap">
+        <div className="flex md:flex-row flex-col gap-2 items-center md:justify-between justify-center px-2 flex-wrap">
           <div className="text-sm text-muted-foreground">
             Mostrando {((page - 1) * limit) + 1} a {Math.min(page * limit, metadata.total)} de {metadata.total} despesas
           </div>
