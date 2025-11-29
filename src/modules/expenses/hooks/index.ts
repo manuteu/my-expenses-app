@@ -7,7 +7,6 @@ export function useGetExpenses(page: number = 1, limit: number = 10, startDate?:
     queryKey: ['expenses', page, limit, startDate, endDate],
     queryFn: () => expenseService.getExpenses(page, limit, startDate, endDate),
     refetchOnWindowFocus: false,
-    enabled: !!(startDate && endDate),
   });
 }
 export function useCreateExpense(onSuccess?: () => void) {
