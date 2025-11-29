@@ -2,6 +2,7 @@ import { useState } from "react"
 import { ChevronLeft, ChevronRight, Trash, X } from "lucide-react"
 import { useDeleteExpense, useGetExpenses } from "../hooks"
 import CreateExpenseDialog from "./create-expense-dialog"
+import DeleteExpenseDialog from "./delete-expense-dialog"
 import { formatCentsToCurrency } from "@/shared/lib/currency"
 import { formatDateToBR, getCurrentMonthRange } from "@/shared/lib/date"
 import {
@@ -14,9 +15,9 @@ import {
 } from "@/shared/ui/table"
 import { Button } from "@/shared/ui/button"
 import { Skeleton } from "@/shared/ui/skeleton"
-import { queryClient } from "@/shared/lib/react-query"
 import { DateRangePicker } from "@/shared/ui/date-range-picker"
 import type { DateRange } from "react-day-picker"
+import type { Expense } from "../types"
 
 const EXPENSE_TYPE_LABELS = {
   simple: 'Simples',
@@ -27,15 +28,15 @@ const EXPENSE_TYPE_LABELS = {
 export default function ListExpenses() {
   const [page, setPage] = useState(1)
   const [dateRange, setDateRange] = useState<DateRange | undefined>(getCurrentMonthRange())
+  const [expenseToDelete, setExpenseToDelete] = useState<Expense | null>(null)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const limit = 10
 
   const startDate = dateRange?.from ? dateRange.from.toISOString().split('T')[0] : undefined
   const endDate = dateRange?.to ? dateRange.to.toISOString().split('T')[0] : undefined
 
   const { data, isLoading } = useGetExpenses(page, limit, startDate, endDate)
-  const { mutate: deleteExpense, isPending } = useDeleteExpense(() => {
-    queryClient.invalidateQueries({ queryKey: ['expenses'] });
-  })
+  const { mutate: deleteExpense, isPending } = useDeleteExpense()
   const expenses = data?.data ?? []
   const metadata = data?.metadata
 
@@ -49,8 +50,21 @@ export default function ListExpenses() {
     }
   }
 
-  const handleDeleteExpense = (expenseId: string) => {
-    deleteExpense(expenseId)
+  const handleOpenDeleteDialog = (expense: Expense) => {
+    setExpenseToDelete(expense)
+    setIsDeleteDialogOpen(true)
+  }
+
+  const handleConfirmDelete = (expenseId: string, scope: 'single' | 'all') => {
+    deleteExpense(
+      { expenseId, scope: scope === 'all' ? 'all' : null },
+      {
+        onSuccess: () => {
+          setIsDeleteDialogOpen(false)
+          setExpenseToDelete(null)
+        }
+      }
+    )
   }
 
   const handleDateRangeChange = (range: DateRange | undefined) => {
@@ -158,7 +172,11 @@ export default function ListExpenses() {
                   {formatCentsToCurrency(expense.amount)}
                 </TableCell>
                 <TableCell className="text-center font-semibold">
-                  <Button variant="ghost" onClick={() => handleDeleteExpense(expense._id)} disabled={isPending}>
+                  <Button 
+                    variant="ghost" 
+                    onClick={() => handleOpenDeleteDialog(expense)} 
+                    disabled={isPending}
+                  >
                     <Trash className="h-4 w-4 text-destructive" />
                   </Button>
                 </TableCell>
@@ -198,6 +216,14 @@ export default function ListExpenses() {
           </div>
         </div>
       )}
+
+      <DeleteExpenseDialog
+        expense={expenseToDelete}
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        onConfirm={handleConfirmDelete}
+        isPending={isPending}
+      />
     </div>
   )
 }

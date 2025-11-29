@@ -36,8 +36,8 @@ class ExpenseService {
     const response = await api.get<IExpensesChartResponse>(url);
     return response.data;
   };
-  deleteExpense = async (expenseId: string) => {
-    const response = await api.delete<Expense>(`/expenses/${expenseId}`);
+  deleteExpense = async (expenseId: string, scope?: 'all' | null) => {
+    const response = await api.delete<Expense>(`/expenses/${expenseId}?scope=${scope}`);
     return response.data;
   };
 }

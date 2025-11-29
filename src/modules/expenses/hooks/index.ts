@@ -32,13 +32,12 @@ export function useGetExpensesChart(startDate?: string, endDate?: string) {
   });
 }
 
-export function useDeleteExpense(onSuccess?: () => void) {
+export function useDeleteExpense() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (expenseId: string) => expenseService.deleteExpense(expenseId),
+    mutationFn: ({ expenseId, scope }: { expenseId: string, scope?: 'all' | null }) => expenseService.deleteExpense(expenseId, scope),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['expenses'] });
-      onSuccess?.();
     },
   });
 }
