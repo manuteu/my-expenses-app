@@ -4,15 +4,30 @@ import type {
   IExpensesChartResponse,
   Expense,
   CreateExpenseInput,
+  ExpenseFilters,
 } from '../types';
 
 class ExpenseService {
-  getExpenses = async (page?: number, limit?: number, startDate?: string, endDate?: string) => {
+  getExpenses = async (
+    page?: number,
+    limit?: number,
+    startDate?: string,
+    endDate?: string,
+    filters?: ExpenseFilters
+  ) => {
     const params = new URLSearchParams();
     if (page) params.append('page', page.toString());
     if (limit) params.append('limit', limit.toString());
     if (startDate) params.append('startDate', startDate);
     if (endDate) params.append('endDate', endDate);
+
+    // Adiciona filtros como query params
+    if (filters?.description) params.append('description', filters.description);
+    if (filters?.methodName) params.append('methodName', filters.methodName);
+    if (filters?.type && filters.type !== 'all')
+      params.append('type', filters.type);
+    if (filters?.categoryName)
+      params.append('categoryName', filters.categoryName);
 
     const response = await api.get<IExpensesResponse>(
       `/expenses${params.toString() ? `?${params.toString()}` : ''}`
@@ -37,7 +52,9 @@ class ExpenseService {
     return response.data;
   };
   deleteExpense = async (expenseId: string, scope?: 'all' | null) => {
-    const response = await api.delete<Expense>(`/expenses/${expenseId}?scope=${scope}`);
+    const response = await api.delete<Expense>(
+      `/expenses/${expenseId}?scope=${scope}`
+    );
     return response.data;
   };
 }

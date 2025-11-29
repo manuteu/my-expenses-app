@@ -1,11 +1,17 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { expenseService } from '../services';
-import type { CreateExpenseInput } from '../types';
+import type { CreateExpenseInput, ExpenseFilters } from '../types';
 
-export function useGetExpenses(page: number = 1, limit: number = 10, startDate?: string, endDate?: string) {
+export function useGetExpenses(
+  page: number = 1, 
+  limit: number = 10, 
+  startDate?: string, 
+  endDate?: string,
+  filters?: ExpenseFilters
+) {
   return useQuery({
-    queryKey: ['expenses', page, limit, startDate, endDate],
-    queryFn: () => expenseService.getExpenses(page, limit, startDate, endDate),
+    queryKey: ['expenses', page, limit, startDate, endDate, filters],
+    queryFn: () => expenseService.getExpenses(page, limit, startDate, endDate, filters),
     refetchOnWindowFocus: false,
   });
 }

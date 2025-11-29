@@ -9,6 +9,13 @@ export type IExpensesResponse = {
 }
 export type IExpensesChartResponse = ExpenseChart[]
 
+export interface ExpenseFilters {
+  description?: string
+  methodName?: string
+  type?: string
+  categoryName?: string
+}
+
 export type PaymentMethodType = 'transfer' | 'card' | 'cash';
 export type CardType = 'credit' | 'debit';
 export type CardFlag = 'visa' | 'mastercard' | 'elo' | 'american-express' | 'other';
