@@ -16,6 +16,8 @@ import {
 interface DateRangePickerProps {
   dateRange?: DateRange
   onDateRangeChange?: (range: DateRange | undefined) => void
+  onApply?: (range: DateRange | undefined) => void
+  onClear?: () => void
   placeholder?: string
   disabled?: boolean
 }
@@ -23,24 +25,42 @@ interface DateRangePickerProps {
 export function DateRangePicker({
   dateRange,
   onDateRangeChange,
+  onApply,
+  onClear,
   placeholder = "Selecione o período",
   disabled = false,
 }: DateRangePickerProps) {
   const [open, setOpen] = React.useState(false)
+  const [tempDateRange, setTempDateRange] = React.useState<DateRange | undefined>(dateRange)
+
+  // Atualiza o estado temporário quando o dateRange externo muda
+  React.useEffect(() => {
+    setTempDateRange(dateRange)
+  }, [dateRange])
 
   const handleDateSelect = (range: DateRange | undefined) => {
     // Se from e to forem a mesma data, trata como se apenas from foi selecionado
     if (range?.from && range?.to && range.from.getTime() === range.to.getTime()) {
-      onDateRangeChange?.({ from: range.from, to: undefined })
+      setTempDateRange({ from: range.from, to: undefined })
       return
     }
     
-    onDateRangeChange?.(range)
-    // Só fecha o popover quando ambas as datas forem selecionadas e diferentes
-    if (range?.from && range?.to && range.from.getTime() !== range.to.getTime()) {
-      setOpen(false)
-    }
+    setTempDateRange(range)
   }
+
+  const handleApply = () => {
+    onApply?.(tempDateRange)
+    onDateRangeChange?.(tempDateRange)
+    setOpen(false)
+  }
+
+  const handleClear = () => {
+    setTempDateRange(undefined)
+    onClear?.()
+    onDateRangeChange?.(undefined)
+  }
+
+  const hasDateRange = tempDateRange?.from && tempDateRange?.to
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -71,12 +91,30 @@ export function DateRangePicker({
       <PopoverContent className="w-auto p-0 rounded-lg" align="end">
         <Calendar
           mode="range"
-          selected={dateRange}
+          selected={tempDateRange}
           onSelect={handleDateSelect}
           locale={ptBR}
           numberOfMonths={2}
           min={1}
         />
+        <div className="flex items-center justify-between gap-2 p-3 border-t border-border">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleClear}
+            className="flex-1"
+          >
+            Limpar
+          </Button>
+          <Button
+            size="sm"
+            onClick={handleApply}
+            disabled={!hasDateRange}
+            className="flex-1"
+          >
+            Aplicar
+          </Button>
+        </div>
       </PopoverContent>
     </Popover>
   )

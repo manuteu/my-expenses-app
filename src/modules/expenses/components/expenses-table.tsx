@@ -3,6 +3,7 @@ import { formatCentsToCurrency } from "@/shared/lib/currency"
 import { formatDateToBR } from "@/shared/lib/date"
 import { DataTable, type DataTableColumn } from "@/shared/components"
 import { Button } from "@/shared/ui/button"
+import { useGetCategories } from "@/modules/category/hooks"
 import type { Expense } from "../types"
 
 const EXPENSE_TYPE_LABELS = {
@@ -28,6 +29,18 @@ export default function ExpensesTable({
   filters,
   onFilterChange
 }: ExpensesTableProps) {
+  const { data: categories } = useGetCategories()
+
+  const categoryOptions = [
+    { label: 'Todas', value: 'all' },
+    ...(categories
+      ?.filter((category) => category.isActive)
+      .map((category) => ({
+        label: category.icon ? `${category.icon} ${category.name}` : category.name,
+        value: category.name
+      })) || [])
+  ]
+
   const columns: DataTableColumn<Expense>[] = [
     {
       header: "Descrição",
@@ -81,8 +94,9 @@ export default function ExpensesTable({
       header: "Categoria",
       cell: (expense) => expense.category.icon,
       filter: {
-        type: 'input',
-        placeholder: 'Buscar categoria...'
+        type: 'select',
+        placeholder: 'Filtrar categoria',
+        options: categoryOptions
       },
       filterKey: 'categoryName'
     },

@@ -57,7 +57,7 @@ export default function ListExpenses() {
     )
   }
 
-  const handleDateRangeChange = (range: DateRange | undefined) => {
+  const handleDateRangeApply = (range: DateRange | undefined) => {
     setDateRange(range)
     // Reset para a primeira página quando o filtro muda
     setPage(1)
@@ -80,7 +80,7 @@ export default function ListExpenses() {
     <div className="space-y-4">
       <ExpensesHeader
         dateRange={dateRange}
-        onDateRangeChange={handleDateRangeChange}
+        onDateRangeApply={handleDateRangeApply}
         onClearFilter={handleClearFilter}
       />
 

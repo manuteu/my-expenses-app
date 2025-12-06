@@ -26,7 +26,7 @@ class ExpenseService {
     if (filters?.methodName) params.append('methodName', filters.methodName);
     if (filters?.type && filters.type !== 'all')
       params.append('type', filters.type);
-    if (filters?.categoryName)
+    if (filters?.categoryName && filters.categoryName !== 'all')
       params.append('categoryName', filters.categoryName);
 
     const response = await api.get<IExpensesResponse>(

@@ -27,6 +27,14 @@ export default function ExpensesDonutChart() {
 
   const { data, isLoading } = useGetExpensesChart(startDateString, endDateString);
 
+  const handleDateRangeApply = (range: DateRange | undefined) => {
+    setDateRange(range);
+  };
+
+  const handleDateRangeClear = () => {
+    setDateRange(undefined);
+  };
+
   // Processar dados para o gráfico - agrupar por método
   const chartData = useMemo(() => {
     if (!data) return [];
@@ -145,7 +153,8 @@ export default function ExpensesDonutChart() {
             </Label>
             <DateRangePicker
               dateRange={dateRange}
-              onDateRangeChange={setDateRange}
+              onApply={handleDateRangeApply}
+              onClear={handleDateRangeClear}
               placeholder="Selecione o período"
             />
           </div>
