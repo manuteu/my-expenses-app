@@ -20,3 +20,7 @@ export function formatDateToBR(date: string | Date): string {
   return format(dateObj, 'dd/MM/yyyy', { locale: ptBR });
 }
 
+export function formatDateToMonthYear(date: string | Date): string {
+  const dateObj = typeof date === 'string' ? parseISO(date) : date;
+  return format(dateObj, 'MMMM yyyy', { locale: ptBR });
+}

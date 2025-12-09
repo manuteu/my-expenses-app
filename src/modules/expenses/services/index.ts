@@ -5,8 +5,12 @@ import type {
   Expense,
   CreateExpenseInput,
   ExpenseFilters,
+  IPendingCountResponse,
+  IPendingTotalAmountResponse,
+  IMonthlyAnalysisResponse,
 } from '../types';
 
+const BASE_URL = '/expenses';
 class ExpenseService {
   getExpenses = async (
     page?: number,
@@ -30,13 +34,13 @@ class ExpenseService {
       params.append('categoryName', filters.categoryName);
 
     const response = await api.get<IExpensesResponse>(
-      `/expenses${params.toString() ? `?${params.toString()}` : ''}`
+      `${BASE_URL}${params.toString() ? `?${params.toString()}` : ''}`
     );
     return response.data;
   };
 
   createExpense = async (data: CreateExpenseInput) => {
-    const response = await api.post<Expense>('/expenses', data);
+    const response = await api.post<Expense>(`${BASE_URL}`, data);
     return response.data;
   };
 
@@ -45,7 +49,7 @@ class ExpenseService {
     if (startDate) params.append('startDate', startDate);
     if (endDate) params.append('endDate', endDate);
 
-    const url = `/expenses/chart-data${
+    const url = `${BASE_URL}/chart-data${
       params.toString() ? `?${params.toString()}` : ''
     }`;
     const response = await api.get<IExpensesChartResponse>(url);
@@ -59,4 +63,55 @@ class ExpenseService {
   };
 }
 
+class ExpenseAnalysisService {
+  getPendingCount = async (
+    filters?: ExpenseFilters
+  ) => {
+    const params = new URLSearchParams();
+    // Adiciona filtros como query params
+    if (filters?.categoryId) params.append('categoryId', filters.categoryId);
+    if (filters?.methodId) params.append('methodId', filters.methodId);
+    if (filters?.type && filters.type !== 'all')
+      params.append('type', filters.type);
+
+    const response = await api.get<IPendingCountResponse>(
+      `${BASE_URL}/analysis/pending-count${params.toString() ? `?${params.toString()}` : ''}`
+    );
+    return response.data;
+  };
+
+  getPendingTotalAmount = async (
+    filters?: ExpenseFilters
+  ) => {
+    const params = new URLSearchParams();
+    // Adiciona filtros como query params
+    if (filters?.categoryId) params.append('categoryId', filters.categoryId);
+    if (filters?.methodId) params.append('methodId', filters.methodId);
+    if (filters?.type && filters.type !== 'all')
+      params.append('type', filters.type);
+
+    const response = await api.get<IPendingTotalAmountResponse>(
+      `${BASE_URL}/analysis/pending-total${params.toString() ? `?${params.toString()}` : ''}`
+    );
+    return response.data;
+  };
+
+  getMonthlyAnalysis = async (
+    filters?: ExpenseFilters
+  ) => {
+    const params = new URLSearchParams();
+    // Adiciona filtros como query params
+    if (filters?.categoryId) params.append('categoryId', filters.categoryId);
+    if (filters?.methodId) params.append('methodId', filters.methodId);
+    if (filters?.type && filters.type !== 'all')
+      params.append('type', filters.type);
+
+    const response = await api.get<IMonthlyAnalysisResponse>(
+      `${BASE_URL}/analysis/monthly${params.toString() ? `?${params.toString()}` : ''}`
+    );
+    return response.data;
+  };
+}
+
 export const expenseService = new ExpenseService();
+export const expenseAnalysisService = new ExpenseAnalysisService();

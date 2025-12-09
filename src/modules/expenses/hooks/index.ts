@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { expenseService } from '../services';
+import { expenseAnalysisService, expenseService } from '../services';
 import type { CreateExpenseInput, ExpenseFilters } from '../types';
 
 export function useGetExpenses(
@@ -44,5 +44,30 @@ export function useDeleteExpense() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['expenses'] });
     },
+  });
+}
+
+
+export function useGetPendingCount(filters?: ExpenseFilters) {
+  return useQuery({
+    queryKey: ['pending-count', filters],
+    queryFn: () => expenseAnalysisService.getPendingCount(filters),
+    refetchOnWindowFocus: false,
+  });
+}
+
+export function useGetPendingTotalAmount(filters?: ExpenseFilters) {
+  return useQuery({
+    queryKey: ['pending-total-amount', filters],
+    queryFn: () => expenseAnalysisService.getPendingTotalAmount(filters),
+    refetchOnWindowFocus: false,
+  });
+}
+
+export function useGetMonthlyAnalysis(filters?: ExpenseFilters) {
+  return useQuery({
+    queryKey: ['monthly-analysis', filters],
+    queryFn: () => expenseAnalysisService.getMonthlyAnalysis(filters),
+    refetchOnWindowFocus: false,
   });
 }

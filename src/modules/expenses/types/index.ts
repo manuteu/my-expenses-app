@@ -5,20 +5,27 @@ export type IExpensesResponse = {
     page: number;
     limit: number;
     totalPages: number;
-  }
-}
-export type IExpensesChartResponse = ExpenseChart[]
+  };
+};
+export type IExpensesChartResponse = ExpenseChart[];
 
 export interface ExpenseFilters {
-  description?: string
-  methodName?: string
-  type?: string
-  categoryName?: string
+  description?: string;
+  methodName?: string;
+  type?: string;
+  categoryName?: string;
+  categoryId?: string;
+  methodId?: string;
 }
 
 export type PaymentMethodType = 'transfer' | 'card' | 'cash';
 export type CardType = 'credit' | 'debit';
-export type CardFlag = 'visa' | 'mastercard' | 'elo' | 'american-express' | 'other';
+export type CardFlag =
+  | 'visa'
+  | 'mastercard'
+  | 'elo'
+  | 'american-express'
+  | 'other';
 export type ExpenseType = 'installment' | 'simple' | 'recurring';
 
 // Tipos para criação de despesas
@@ -51,9 +58,9 @@ export interface CreateRecurringExpenseInput {
   monthsToGenerate?: number;
 }
 
-export type CreateExpenseInput = 
-  | CreateSimpleExpenseInput 
-  | CreateInstallmentExpenseInput 
+export type CreateExpenseInput =
+  | CreateSimpleExpenseInput
+  | CreateInstallmentExpenseInput
   | CreateRecurringExpenseInput;
 
 interface Card {
@@ -112,4 +119,25 @@ export interface ExpenseChart {
   date: string;
   type: ExpenseType;
   category: string;
+}
+
+export interface IPendingCountResponse {
+  count: number;
+}
+
+export interface IPendingTotalAmountResponse {
+  total: number;
+}
+
+export interface IMonthlyAnalysisResponse {
+  pending: {
+    count: number;
+    total: number;
+  };
+  paid: {
+    total: number;
+  };
+  total: number;
+  month: number;
+  year: number;
 }
