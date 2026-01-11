@@ -103,10 +103,15 @@ class ExpenseAnalysisService {
   };
 
   getMonthlyAnalysis = async (
+    startDate?: string,
+    endDate?: string,
     filters?: ExpenseFilters
   ) => {
     const params = new URLSearchParams();
-    // Adiciona filtros como query params
+    // Adiciona filtros de data
+    if (startDate) params.append('startDate', startDate);
+    if (endDate) params.append('endDate', endDate);
+    // Adiciona outros filtros como query params
     if (filters?.categoryId) params.append('categoryId', filters.categoryId);
     if (filters?.methodId) params.append('methodId', filters.methodId);
     if (filters?.type && filters.type !== 'all')

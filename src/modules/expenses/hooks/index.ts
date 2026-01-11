@@ -64,10 +64,10 @@ export function useGetPendingTotalAmount(filters?: ExpenseFilters) {
   });
 }
 
-export function useGetMonthlyAnalysis(filters?: ExpenseFilters) {
+export function useGetMonthlyAnalysis(startDate?: string, endDate?: string, filters?: ExpenseFilters) {
   return useQuery({
-    queryKey: ['monthly-analysis', filters],
-    queryFn: () => expenseAnalysisService.getMonthlyAnalysis(filters),
+    queryKey: ['monthly-analysis', startDate, endDate, filters],
+    queryFn: () => expenseAnalysisService.getMonthlyAnalysis(startDate, endDate, filters),
     refetchOnWindowFocus: false,
   });
 }

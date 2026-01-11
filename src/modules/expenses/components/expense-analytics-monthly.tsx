@@ -3,8 +3,13 @@ import { useGetMonthlyAnalysis } from "../hooks";
 import { formatCentsToCurrency } from "@/shared/lib/currency";
 import { Clock, BanknoteArrowUp, BanknoteArrowDown, Banknote } from "lucide-react";
 
-export default function ExpenseAnalyticsMonthly() {
-  const { data: monthlyAnalysisData, isLoading: isMonthlyAnalysisLoading } = useGetMonthlyAnalysis();
+interface ExpenseAnalyticsMonthlyProps {
+  startDate?: string;
+  endDate?: string;
+}
+
+export default function ExpenseAnalyticsMonthly({ startDate, endDate }: ExpenseAnalyticsMonthlyProps) {
+  const { data: monthlyAnalysisData, isLoading: isMonthlyAnalysisLoading } = useGetMonthlyAnalysis(startDate, endDate);
   const pendingCount = monthlyAnalysisData?.pending.count || 0;
   const pendingTotalAmount = monthlyAnalysisData?.pending.total || 0;
   const paidTotalAmount = monthlyAnalysisData?.paid.total || 0;

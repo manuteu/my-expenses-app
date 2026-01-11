@@ -1,12 +1,8 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Label as RechartsLabel } from "recharts";
-import { CalendarIcon } from "lucide-react";
 import type { DateRange } from "react-day-picker";
 import { useGetExpensesChart } from "../hooks";
-import { DateRangePicker } from "@/shared/ui/date-range-picker";
-import { Label } from "@/shared/ui/label";
 import { formatCentsToCurrency } from "@/shared/lib/currency";
-import { getCurrentMonthRange } from "@/shared/lib/date";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/ui/card";
 
 // Paleta de cores para os métodos de pagamento
@@ -18,22 +14,14 @@ const COLORS = [
   'var(--chart-5)',
 ];
 
-export default function ExpensesDonutChart() {
-  const [dateRange, setDateRange] = useState<DateRange | undefined>(getCurrentMonthRange());
+interface ExpensesDonutChartProps {
+  dateRange?: DateRange;
+  startDate?: string;
+  endDate?: string;
+}
 
-  // Só chama a API quando ambas as datas forem selecionadas
-  const startDateString = dateRange?.from && dateRange?.to ? dateRange.from.toISOString() : undefined;
-  const endDateString = dateRange?.from && dateRange?.to ? dateRange.to.toISOString() : undefined;
-
-  const { data, isLoading } = useGetExpensesChart(startDateString, endDateString);
-
-  const handleDateRangeApply = (range: DateRange | undefined) => {
-    setDateRange(range);
-  };
-
-  const handleDateRangeClear = () => {
-    setDateRange(undefined);
-  };
+export default function ExpensesDonutChart({ startDate, endDate }: ExpensesDonutChartProps) {
+  const { data, isLoading } = useGetExpensesChart(startDate, endDate);
 
   // Processar dados para o gráfico - agrupar por método
   const chartData = useMemo(() => {
@@ -135,29 +123,13 @@ export default function ExpensesDonutChart() {
   return (
     <Card className="w-full">
       <CardHeader>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <CardTitle className="text-2xl font-bold text-foreground">
-              Despesas por Método
-            </CardTitle>
-            <CardDescription className="text-muted-foreground">
-              Visualize suas despesas organizadas por método de pagamento
-            </CardDescription>
-          </div>
-
-          {/* Filtro de período */}
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="date-range" className="text-xs text-muted-foreground flex items-center gap-1">
-              <CalendarIcon className="h-3 w-3" />
-              Período
-            </Label>
-            <DateRangePicker
-              dateRange={dateRange}
-              onApply={handleDateRangeApply}
-              onClear={handleDateRangeClear}
-              placeholder="Selecione o período"
-            />
-          </div>
+        <div>
+          <CardTitle className="text-2xl font-bold text-foreground">
+            Despesas por Método
+          </CardTitle>
+          <CardDescription className="text-muted-foreground">
+            Visualize suas despesas organizadas por método de pagamento
+          </CardDescription>
         </div>
       </CardHeader>
 
