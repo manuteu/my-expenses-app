@@ -1,4 +1,4 @@
-import { Trash } from "lucide-react"
+import { Trash, Pencil } from "lucide-react"
 import { formatCentsToCurrency } from "@/shared/lib/currency"
 import { formatDateToBR } from "@/shared/lib/date"
 import { DataTable, type DataTableColumn } from "@/shared/components"
@@ -16,6 +16,7 @@ interface ExpensesTableProps {
   expenses: Expense[]
   isLoading: boolean
   onDelete: (expense: Expense) => void
+  onEdit?: (expense: Expense) => void
   isDeleting?: boolean
   filters?: Record<string, string>
   onFilterChange?: (filterKey: string, value: string) => void
@@ -25,6 +26,7 @@ export default function ExpensesTable({
   expenses,
   isLoading,
   onDelete,
+  onEdit,
   isDeleting = false,
   filters,
   onFilterChange
@@ -108,15 +110,28 @@ export default function ExpensesTable({
       className: "text"
     },
     {
-      header: "Excluir",
+      header: "Ações",
       cell: (expense) => (
-        <Button 
-          variant="ghost" 
-          onClick={() => onDelete(expense)} 
-          disabled={isDeleting}
-        >
-          <Trash className="h-4 w-4 text-destructive" />
-        </Button>
+        <div className="flex items-center gap-1">
+          {onEdit && (
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => onEdit(expense)} 
+              disabled={isDeleting}
+            >
+              <Pencil className="h-4 w-4 text-primary" />
+            </Button>
+          )}
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={() => onDelete(expense)} 
+            disabled={isDeleting}
+          >
+            <Trash className="h-4 w-4 text-destructive" />
+          </Button>
+        </div>
       ),
       className: "text-center font-semibold"
     }

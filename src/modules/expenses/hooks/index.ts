@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { expenseAnalysisService, expenseService } from '../services';
-import type { CreateExpenseInput, ExpenseFilters } from '../types';
+import type { CreateExpenseInput, UpdateExpenseInput, ExpenseFilters } from '../types';
 
 export function useGetExpenses(
   page: number = 1, 
@@ -69,5 +69,17 @@ export function useGetMonthlyAnalysis(filters?: ExpenseFilters) {
     queryKey: ['monthly-analysis', filters],
     queryFn: () => expenseAnalysisService.getMonthlyAnalysis(filters),
     refetchOnWindowFocus: false,
+  });
+}
+
+export function useUpdateExpense(onSuccess?: () => void) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ expenseId, data }: { expenseId: string, data: UpdateExpenseInput }) => 
+      expenseService.updateExpense(expenseId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['expenses'] });
+      onSuccess?.();
+    },
   });
 }

@@ -4,6 +4,7 @@ import ExpensesHeader from "./expenses-header"
 import ExpensesTable from "./expenses-table"
 import ExpensesPagination from "./expenses-pagination"
 import DeleteExpenseDialog from "./delete-expense-dialog"
+import EditExpenseDialog from "./edit-expense-dialog"
 import { getCurrentMonthRange } from "@/shared/lib/date"
 import { useDebounce } from "@/shared/hooks"
 import type { DateRange } from "react-day-picker"
@@ -13,7 +14,9 @@ export default function ListExpenses() {
   const [page, setPage] = useState(1)
   const [dateRange, setDateRange] = useState<DateRange | undefined>(getCurrentMonthRange())
   const [expenseToDelete, setExpenseToDelete] = useState<Expense | null>(null)
+  const [expenseToEdit, setExpenseToEdit] = useState<Expense | null>(null)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [filters, setFilters] = useState<Record<string, string>>({})
   const limit = 10
 
@@ -43,6 +46,11 @@ export default function ListExpenses() {
   const handleOpenDeleteDialog = (expense: Expense) => {
     setExpenseToDelete(expense)
     setIsDeleteDialogOpen(true)
+  }
+
+  const handleOpenEditDialog = (expense: Expense) => {
+    setExpenseToEdit(expense)
+    setIsEditDialogOpen(true)
   }
 
   const handleConfirmDelete = (expenseId: string, scope: 'single' | 'all') => {
@@ -88,6 +96,7 @@ export default function ListExpenses() {
         expenses={expenses}
         isLoading={isLoading}
         onDelete={handleOpenDeleteDialog}
+        onEdit={handleOpenEditDialog}
         isDeleting={isPending}
         filters={filters}
         onFilterChange={handleFilterChange}
@@ -110,6 +119,12 @@ export default function ListExpenses() {
         onOpenChange={setIsDeleteDialogOpen}
         onConfirm={handleConfirmDelete}
         isPending={isPending}
+      />
+
+      <EditExpenseDialog
+        expense={expenseToEdit}
+        open={isEditDialogOpen}
+        onOpenChange={setIsEditDialogOpen}
       />
     </div>
   )

@@ -4,6 +4,7 @@ import type {
   IExpensesChartResponse,
   Expense,
   CreateExpenseInput,
+  UpdateExpenseInput,
   ExpenseFilters,
   IPendingCountResponse,
   IPendingTotalAmountResponse,
@@ -59,6 +60,11 @@ class ExpenseService {
     const response = await api.delete<Expense>(
       `/expenses/${expenseId}?scope=${scope}`
     );
+    return response.data;
+  };
+
+  updateExpense = async (expenseId: string, data: UpdateExpenseInput) => {
+    const response = await api.patch<Expense>(`${BASE_URL}/${expenseId}`, data);
     return response.data;
   };
 }

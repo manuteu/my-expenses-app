@@ -141,3 +141,46 @@ export interface IMonthlyAnalysisResponse {
   month: number;
   year: number;
 }
+
+// Tipos para edição de despesas
+export type UpdateScope = 'single' | 'all' | 'future';
+
+export interface UpdateSimpleExpenseInput {
+  amount?: number;
+  category?: string;
+  method?: string;
+  date?: string;
+  description?: string;
+  type?: 'simple';
+  updateScope?: UpdateScope;
+}
+
+export interface UpdateInstallmentExpenseInput {
+  amount?: number;
+  totalAmount?: number;
+  installments?: number;
+  category?: string;
+  method?: string;
+  date?: string;
+  startDate?: string;
+  description?: string;
+  type?: 'installment';
+  updateScope?: UpdateScope;
+}
+
+export interface UpdateRecurringExpenseInput {
+  amount?: number;
+  category?: string;
+  method?: string;
+  date?: string;
+  startDate?: string;
+  description?: string;
+  type?: 'recurring';
+  monthsToGenerate?: number;
+  updateScope?: UpdateScope;
+}
+
+export type UpdateExpenseInput =
+  | UpdateSimpleExpenseInput
+  | UpdateInstallmentExpenseInput
+  | UpdateRecurringExpenseInput;
