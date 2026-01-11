@@ -55,7 +55,9 @@ export default function ExpensesChart({ startDate, endDate }: ExpensesChartProps
     if (active && payload && payload.length) {
       return (
         <div className="bg-background border border-border p-3 rounded-lg shadow-lg">
-          <p className="font-semibold text-foreground">{payload[0].payload.category}</p>
+          <p className="font-semibold text-foreground">
+            {payload[0].payload.category} ({((payload[0].value / totalAmount) * 100).toFixed(1)}%)
+          </p>
           <p className="text-sm text-muted-foreground">
             Total: <span className="font-bold text-foreground">{formatCentsToCurrency(payload[0].value * 100)}</span>
           </p>
