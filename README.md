@@ -1,54 +1,28 @@
-# React + TypeScript + Vite
+# My Expenses App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicação web para controle simples de despesas pessoais, construída com **React**, **TypeScript** e **Vite**.
 
-Currently, two official plugins are available:
+### Funcionalidades principais
+- **Cadastro de despesas**: registre valor, categoria, data e descrição.
+- **Listagem filtrável**: visualize e filtre despesas por período e/ou categoria.
+- **Resumo por categoria**: veja o total gasto em cada categoria.
+- **Gráfico de despesas**: acompanhe visualmente a distribuição dos gastos.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Como rodar o projeto
+- **Pré-requisitos**:
+  - Node.js (versão LTS recomendada)
+  - npm ou yarn
 
-## Expanding the ESLint configuration
+- **Instalação de dependências**:
+  - Com npm: `npm install`
+  - Com yarn: `yarn`
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Rodar em modo desenvolvimento**:
+  - Com npm: `npm run dev`
+  - Com yarn: `yarn dev`
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- **Build para produção**:
+  - Com npm: `npm run build`
+  - Com yarn: `yarn build`
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+Após rodar `npm run dev` ou `yarn dev`, acesse o endereço exibido no terminal (geralmente `http://localhost:5173`).
