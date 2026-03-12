@@ -11,7 +11,7 @@ import {
   SidebarTrigger,
 } from "@/shared/ui/sidebar"
 
-import { LayoutDashboard, CreditCard, Banknote, Receipt, Wallet } from 'lucide-react'
+import { LayoutDashboard, CreditCard, Banknote, Receipt, Tags, Wallet } from 'lucide-react'
 import { useNavigate, useLocation } from "react-router"
 
 const data = [
@@ -34,6 +34,11 @@ const data = [
     title: "Métodos",
     url: "/methods",
     icon: Banknote,
+  },
+  {
+    title: "Categorias",
+    url: "/categories",
+    icon: Tags,
   },
 ]
 

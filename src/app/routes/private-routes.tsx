@@ -1,5 +1,6 @@
 import AppLayout from "@/pages/_layout/app";
 import CardsPage from "@/pages/cards";
+import CategoriesPage from "@/pages/categories";
 import DashboardPage from "@/pages/dashboard";
 import ExpensesPage from "@/pages/expenses";
 import MethodsPage from "@/pages/methods";
@@ -25,6 +26,10 @@ const privateRoutes = [
       {
         path: '/methods',
         element: <MethodsPage />,
+      },
+      {
+        path: '/categories',
+        element: <CategoriesPage />,
       },
     ]
   },
