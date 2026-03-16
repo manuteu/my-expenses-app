@@ -1,65 +1,44 @@
 import { useMemo } from "react";
-import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from "recharts";
-import type { DateRange } from "react-day-picker";
-import { useGetExpensesChart } from "../hooks";
+import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
+import { useGetExpensesChartByCategory } from "../hooks";
 import { formatCentsToCurrency } from "@/shared/lib/currency";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/ui/card";
 
 interface ExpensesChartProps {
-  dateRange?: DateRange;
   startDate?: string;
   endDate?: string;
 }
 
 export default function ExpensesChart({ startDate, endDate }: ExpensesChartProps) {
-  const { data, isLoading } = useGetExpensesChart(startDate, endDate);
+  const { data, isLoading } = useGetExpensesChartByCategory(startDate, endDate);
+  const formatAmount = (amount: number) => formatCentsToCurrency(amount);
 
-  // Processar dados para o gráfico - agrupar por categoria
+  // Dados já chegam agregados por categoria
   const chartData = useMemo(() => {
-    if (!data) return [];
-
-    // Agrupar despesas por categoria
-    const groupedByCategory = data.reduce((acc, expense) => {
-      const categoryName = expense.category || 'Sem categoria';
-
-      if (!acc[categoryName]) {
-        acc[categoryName] = {
-          category: categoryName,
-          total: 0,
-          count: 0,
-        };
-      }
-
-      acc[categoryName].total += expense.amount;
-      acc[categoryName].count += 1;
-
-      return acc;
-    }, {} as Record<string, { category: string; total: number; count: number }>);
-
-    // Converter para array
-    return Object.values(groupedByCategory)
-      .map((value) => ({
-        category: value.category,
-        total: value.total / 100, // Converter centavos para reais para o gráfico
-        count: value.count,
-      }));
+    if (!data?.data) return [];
+    return data.data.map((item) => ({
+      category: item.categoryName,
+      icon: item.categoryIcon,
+      color: item.categoryColor,
+      total: item.totalAmount,
+      count: item.expenseCount,
+    }));
   }, [data]);
 
-  // Calcular total geral
-  const totalAmount = useMemo(() => {
-    return chartData.reduce((sum, item) => sum + item.total, 0);
-  }, [chartData]);
+  const totalAmount = data?.totalAmount ?? 0;
+  const totalExpensesCount = data?.totalExpensesCount ?? 0;
 
   // Custom tooltip para formatar valores
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
+      const percentage = totalAmount > 0 ? ((payload[0].value / totalAmount) * 100).toFixed(1) : "0.0";
       return (
         <div className="bg-background border border-border p-3 rounded-lg shadow-lg">
           <p className="font-semibold text-foreground">
-            {payload[0].payload.category} ({((payload[0].value / totalAmount) * 100).toFixed(1)}%)
+            {payload[0].payload.icon} {payload[0].payload.category} ({percentage}%)
           </p>
           <p className="text-sm text-muted-foreground">
-            Total: <span className="font-bold text-foreground">{formatCentsToCurrency(payload[0].value * 100)}</span>
+            Total: <span className="font-bold text-foreground">{formatAmount(payload[0].value)}</span>
           </p>
           <p className="text-xs text-muted-foreground">
             {payload[0].payload.count} despesa(s)
@@ -102,10 +81,10 @@ export default function ExpensesChart({ startDate, endDate }: ExpensesChartProps
             <div className="mb-6 p-4 bg-muted/50 rounded-lg border border-border">
               <p className="text-sm text-muted-foreground mb-1">Total do Período</p>
               <p className="text-3xl font-bold text-foreground">
-                {formatCentsToCurrency(totalAmount * 100)}
+                {formatAmount(totalAmount)}
               </p>
               <p className="text-xs text-muted-foreground mt-1">
-                {chartData.reduce((sum, item) => sum + item.count, 0)} despesa(s)
+                {totalExpensesCount} despesa(s)
               </p>
             </div>
 
@@ -123,10 +102,13 @@ export default function ExpensesChart({ startDate, endDate }: ExpensesChartProps
                 <Tooltip content={<CustomTooltip />} cursor={{ fill: 'transparent' }} />
                 <Bar
                   dataKey="total"
-                  fill="var(--primary)"
                   radius={[8, 8, 0, 0]}
                   name="Total por Categoria"
-                />
+                >
+                  {chartData.map((item) => (
+                    <Cell key={`bar-cell-${item.category}`} fill={item.color || "var(--primary)"} />
+                  ))}
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </>

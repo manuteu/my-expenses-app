@@ -7,7 +7,34 @@ export type IExpensesResponse = {
     totalPages: number;
   };
 };
-export type IExpensesChartResponse = ExpenseChart[];
+export interface IExpensesByCategoryChartItem {
+  categoryId: string;
+  categoryName: string;
+  categoryIcon: string;
+  categoryColor: string;
+  expenseCount: number;
+  totalAmount: number;
+}
+
+export interface IExpensesByCategoryChartResponse {
+  totalAmount: number;
+  totalExpensesCount: number;
+  data: IExpensesByCategoryChartItem[];
+}
+
+export interface IExpensesByMethodChartItem {
+  methodId: string;
+  methodName: string;
+  methodType: PaymentMethodType;
+  expenseCount: number;
+  totalAmount: number;
+  percentage: number;
+}
+
+export interface IExpensesByMethodChartResponse {
+  totalAmount: number;
+  data: IExpensesByMethodChartItem[];
+}
 
 export interface ExpenseFilters {
   description?: string;
@@ -110,15 +137,6 @@ export interface Expense {
   createdAt: string;
   updatedAt: string;
   __v: number;
-}
-
-export interface ExpenseChart {
-  amount: number;
-  description: string;
-  method: string;
-  date: string;
-  type: ExpenseType;
-  category: string;
 }
 
 export interface IPendingCountResponse {

@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Label as RechartsLabel } from "recharts";
-import type { DateRange } from "react-day-picker";
-import { useGetExpensesChart } from "../hooks";
+import { useGetExpensesChartByMethod } from "../hooks";
 import { formatCentsToCurrency } from "@/shared/lib/currency";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/ui/card";
 
@@ -15,65 +14,40 @@ const COLORS = [
 ];
 
 interface ExpensesDonutChartProps {
-  dateRange?: DateRange;
   startDate?: string;
   endDate?: string;
 }
 
 export default function ExpensesDonutChart({ startDate, endDate }: ExpensesDonutChartProps) {
-  const { data, isLoading } = useGetExpensesChart(startDate, endDate);
+  const { data, isLoading } = useGetExpensesChartByMethod(startDate, endDate);
+  const formatAmount = (amount: number) => formatCentsToCurrency(amount);
 
-  // Processar dados para o gráfico - agrupar por método
+  // Dados já chegam agregados por método
   const chartData = useMemo(() => {
-    if (!data) return [];
-
-    // Agrupar despesas por método
-    const groupedByMethod = data.reduce((acc, expense) => {
-      const methodName = expense.method || 'Sem método';
-
-      if (!acc[methodName]) {
-        acc[methodName] = {
-          method: methodName,
-          total: 0,
-          count: 0,
-        };
-      }
-
-      acc[methodName].total += expense.amount;
-      acc[methodName].count += 1;
-
-      return acc;
-    }, {} as Record<string, { method: string; total: number; count: number }>);
-
-    // Converter para array
-    return Object.values(groupedByMethod)
-      .map((value) => ({
-        name: value.method,
-        value: value.total / 100, // Converter centavos para reais
-        count: value.count,
-        totalCents: value.total, // Manter valor em centavos para formatação
-      }));
+    if (!data?.data) return [];
+    return data.data.map((item) => ({
+      name: item.methodName,
+      value: item.totalAmount,
+      count: item.expenseCount,
+      percentage: item.percentage,
+    }));
   }, [data]);
 
-  // Calcular total geral
-  const totalAmount = useMemo(() => {
-    return chartData.reduce((sum, item) => sum + item.value, 0);
-  }, [chartData]);
+  const totalAmount = data?.totalAmount ?? 0;
 
   // Custom tooltip para formatar valores
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      const percentage = totalAmount > 0 ? ((data.value / totalAmount) * 100).toFixed(1) : 0;
+      const chartItem = payload[0].payload;
 
       return (
         <div className="bg-background border border-border p-3 rounded-lg shadow-lg">
-          <p className="font-semibold text-foreground">{data.name}</p>
+          <p className="font-semibold text-foreground">{chartItem.name}</p>
           <p className="text-sm text-muted-foreground">
-            Total: <span className="font-bold text-foreground">{formatCentsToCurrency(data.totalCents)}</span>
+            Total: <span className="font-bold text-foreground">{formatAmount(chartItem.value)}</span>
           </p>
           <p className="text-xs text-muted-foreground">
-            {data.count} despesa(s) • {percentage}%
+            {chartItem.count} despesa(s) • {chartItem.percentage.toFixed(1)}%
           </p>
         </div>
       );
@@ -111,7 +85,7 @@ export default function ExpensesDonutChart({ startDate, endDate }: ExpensesDonut
     return (
       <text x={cx} y={cy} textAnchor="middle" dominantBaseline="middle">
         <tspan x={cx} dy="-0.5em" className="text-2xl font-bold fill-foreground">
-          {formatCentsToCurrency(totalAmount * 100)}
+          {formatAmount(totalAmount)}
         </tspan>
         <tspan x={cx} dy="1.5em" className="text-sm fill-muted-foreground">
           Total
@@ -174,8 +148,6 @@ export default function ExpensesDonutChart({ startDate, endDate }: ExpensesDonut
             {/* Lista de métodos com valores */}
             <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
               {chartData.map((item, index) => {
-                const percentage = totalAmount > 0 ? ((item.value / totalAmount) * 100).toFixed(1) : 0;
-
                 return (
                   <div
                     key={item.name}
@@ -188,12 +160,12 @@ export default function ExpensesDonutChart({ startDate, endDate }: ExpensesDonut
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-sm text-foreground truncate">{item.name}</p>
                       <p className="text-xs text-muted-foreground">
-                        {item.count} despesa(s) • {percentage}%
+                        {item.count} despesa(s) • {item.percentage.toFixed(1)}%
                       </p>
                     </div>
                     <div className="text-right">
                       <p className="font-bold text-sm text-foreground">
-                        {formatCentsToCurrency(item.totalCents)}
+                        {formatAmount(item.value)}
                       </p>
                     </div>
                   </div>

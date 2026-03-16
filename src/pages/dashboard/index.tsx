@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { CalendarIcon } from "lucide-react";
 import type { DateRange } from "react-day-picker";
-import ExpensesChart from "@/modules/expenses/components/expenses-chart";
-import ExpensesDonutChart from "@/modules/expenses/components/expenses-donut-chart";
-import ExpenseAnalyticsMonthly from "@/modules/expenses/components/expense-analytics-monthly";
+import DashboardExpensesOverview from "@/modules/expenses/components/dashboard-expenses-overview";
 import { DateRangePicker } from "@/shared/ui/date-range-picker";
 import { Label } from "@/shared/ui/label";
 import { Card, CardContent } from "@/shared/ui/card";
@@ -52,28 +50,10 @@ export default function DashboardPage() {
         </CardContent>
       </Card>
 
-      {/* Cards analíticos */}
-      <ExpenseAnalyticsMonthly 
-        startDate={startDateString} 
+      <DashboardExpensesOverview
+        startDate={startDateString}
         endDate={endDateString}
       />
-      
-      {/* Gráficos de despesas */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 md:gap-6 gap-4">
-        {/* Gráfico de barras por categoria */}
-        <ExpensesChart 
-          dateRange={dateRange}
-          startDate={startDateString}
-          endDate={endDateString}
-        />
-        
-        {/* Gráfico donut por método */}
-        <ExpensesDonutChart 
-          dateRange={dateRange}
-          startDate={startDateString}
-          endDate={endDateString}
-        />
-      </div>
     </main>
   )
 }

@@ -1,7 +1,8 @@
 import { api } from '@/app/config/axios';
 import type {
   IExpensesResponse,
-  IExpensesChartResponse,
+  IExpensesByCategoryChartResponse,
+  IExpensesByMethodChartResponse,
   Expense,
   CreateExpenseInput,
   UpdateExpenseInput,
@@ -45,15 +46,27 @@ class ExpenseService {
     return response.data;
   };
 
-  getExpensesChart = async (startDate?: string, endDate?: string) => {
+  getExpensesChartByCategory = async (startDate?: string, endDate?: string) => {
     const params = new URLSearchParams();
     if (startDate) params.append('startDate', startDate);
     if (endDate) params.append('endDate', endDate);
 
-    const url = `${BASE_URL}/chart-data${
+    const url = `${BASE_URL}/chart-data/by-category${
       params.toString() ? `?${params.toString()}` : ''
     }`;
-    const response = await api.get<IExpensesChartResponse>(url);
+    const response = await api.get<IExpensesByCategoryChartResponse>(url);
+    return response.data;
+  };
+
+  getExpensesChartByMethod = async (startDate?: string, endDate?: string) => {
+    const params = new URLSearchParams();
+    if (startDate) params.append('startDate', startDate);
+    if (endDate) params.append('endDate', endDate);
+
+    const url = `${BASE_URL}/chart-data/by-method${
+      params.toString() ? `?${params.toString()}` : ''
+    }`;
+    const response = await api.get<IExpensesByMethodChartResponse>(url);
     return response.data;
   };
   deleteExpense = async (expenseId: string, scope?: 'all' | null) => {

@@ -27,13 +27,19 @@ export function useCreateExpense(onSuccess?: () => void) {
   });
 }
 
-export function useGetExpensesChart(startDate?: string, endDate?: string) {
+export function useGetExpensesChartByCategory(startDate?: string, endDate?: string) {
   return useQuery({
-    queryKey: ['expenses-chart', startDate, endDate],
-    queryFn: () => expenseService.getExpensesChart(startDate, endDate),
+    queryKey: ['expenses-chart-by-category', startDate, endDate],
+    queryFn: () => expenseService.getExpensesChartByCategory(startDate, endDate),
     refetchOnWindowFocus: false,
-    // Só executa a query quando ambas as datas estiverem definidas
-    enabled: !!(startDate && endDate),
+  });
+}
+
+export function useGetExpensesChartByMethod(startDate?: string, endDate?: string) {
+  return useQuery({
+    queryKey: ['expenses-chart-by-method', startDate, endDate],
+    queryFn: () => expenseService.getExpensesChartByMethod(startDate, endDate),
+    refetchOnWindowFocus: false,
   });
 }
 
