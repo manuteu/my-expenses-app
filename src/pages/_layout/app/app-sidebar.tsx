@@ -11,7 +11,7 @@ import {
   SidebarTrigger,
 } from "@/shared/ui/sidebar"
 
-import { LayoutDashboard, CreditCard, Banknote, Receipt, Tags, Wallet } from 'lucide-react'
+import { LayoutDashboard, CreditCard, Banknote, Receipt, Tags, Wallet, FileUp } from 'lucide-react'
 import { useNavigate, useLocation } from "react-router"
 
 const data = [
@@ -39,6 +39,11 @@ const data = [
     title: "Categorias",
     url: "/categories",
     icon: Tags,
+  },
+  {
+    title: "Importar CSV",
+    url: "/import",
+    icon: FileUp,
   },
 ]
 
