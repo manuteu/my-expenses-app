@@ -150,7 +150,7 @@ export default function ImportReviewStep({
                           {new Intl.NumberFormat('pt-BR', {
                             style: 'currency',
                             currency: 'BRL',
-                          }).format(field.amount)}
+                          }).format(field.amount / 100)}
                         </td>
 
                         {/* Descrição editável */}
