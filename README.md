@@ -1,6 +1,6 @@
 # My Expenses App
 
-Aplicação web para controle simples de despesas pessoais, construída com **React**, **TypeScript** e **Vite**.
+Aplicação web para controle de despesas pessoais, construída com **React**, **TypeScript** e **Vite**.
 
 ### Funcionalidades principais
 - **Cadastro de despesas**: registre valor, categoria, data e descrição.
