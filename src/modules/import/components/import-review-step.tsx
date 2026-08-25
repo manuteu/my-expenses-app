@@ -54,15 +54,8 @@ export default function ImportReviewStep({
 
   const { mutate: batchImport, isPending, error } = useImportBatch();
 
-  const onSubmit = (data: ImportReviewFormData) => {
-    const expenses = data.expenses.map((e) => ({
-      ...e,
-      amount: Math.round(e.amount * 100),
-    }));
-    batchImport(
-      { expenses },
-      { onSuccess: (res) => onSuccess(res.created) },
-    );
+  const onSubmit = ({ expenses }: ImportReviewFormData) => {
+    batchImport({ expenses }, { onSuccess: (res) => onSuccess(res.created) });
   };
 
   const errorMessage = error
@@ -93,7 +86,7 @@ export default function ImportReviewStep({
             {new Intl.NumberFormat('pt-BR', {
               style: 'currency',
               currency: 'BRL',
-            }).format(totalAmount)}
+            }).format(totalAmount / 100)}
           </span>
         </div>
       </div>
